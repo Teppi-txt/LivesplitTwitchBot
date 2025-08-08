@@ -42,7 +42,7 @@ class Bot(commands.AutoBot):
         )
 
     async def setup_hook(self) -> None:
-        await self.add_component(simple_commands.SimpleCommands(self))
+        await self.add_component(simple_commands.NonIntrusiveCommands(self))
 
     async def event_oauth_authorized(self, payload: twitchio.authentication.UserTokenPayload) -> None:
         await self.add_token(payload.access_token, payload.refresh_token)
