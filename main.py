@@ -43,6 +43,8 @@ class Bot(commands.AutoBot):
 
     async def setup_hook(self) -> None:
         await self.add_component(simple_commands.NonIntrusiveCommands(self))
+        await self.add_component(simple_commands.IntrusiveCommands(self))
+        await self.add_component(simple_commands.Redeems(self))
 
     async def event_oauth_authorized(self, payload: twitchio.authentication.UserTokenPayload) -> None:
         await self.add_token(payload.access_token, payload.refresh_token)
@@ -51,12 +53,14 @@ class Bot(commands.AutoBot):
             return
 
         if payload.user_id == self.bot_id:
-            # We usually don't want subscribe to events on the bots channel...
+            # We usually don't want to subscribe to events on the bots channel...
             return
 
         # A list of subscriptions we would like to make to the newly authorized channel...
         subs: list[eventsub.SubscriptionPayload] = [
             eventsub.ChatMessageSubscription(broadcaster_user_id=payload.user_id, user_id=self.bot_id),
+            eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=payload.user_id, user_id=self.bot_id),
+            eventsub.ChannelPointsRedeemUpdateSubscription(broadcaster_user_id=payload.user_id, user_id=self.bot_id)
         ]
 
         resp: twitchio.MultiSubscribePayload = await self.multi_subscribe(subs)
