@@ -1,12 +1,3 @@
-"""An example of connecting to a conduit and subscribing to EventSub when a User Authorizes the application.
-
-This bot can be restarted as many times without needing to subscribe or worry about tokens:
-- Tokens are stored in '.tio.tokens.json' by default
-- Subscriptions last 72 hours after the bot is disconnected and refresh when the bot starts.
-
-Consider reading through the documentation for AutoBot for more in depth explanations.
-"""
-
 import asyncio
 import logging
 from typing import TYPE_CHECKING
@@ -53,10 +44,8 @@ class Bot(commands.AutoBot):
             return
 
         if payload.user_id == self.bot_id:
-            # We usually don't want to subscribe to events on the bots channel...
             return
 
-        # A list of subscriptions we would like to make to the newly authorized channel...
         subs: list[eventsub.SubscriptionPayload] = [
             eventsub.ChatMessageSubscription(broadcaster_user_id=payload.user_id, user_id=self.bot_id),
             eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=payload.user_id, user_id=self.bot_id),
@@ -115,9 +104,6 @@ async def setup_database(db: asqlite.Pool) -> tuple[list[tuple[str, str]], list[
 
     return tokens, subs
 
-
-# Our main entry point for our Bot
-# Best to setup_logging here, before anything starts
 def main() -> None:
     twitchio.utils.setup_logging(level=logging.INFO)
 
