@@ -1,4 +1,4 @@
-# TeppiTwitchBot
+# LivesplitTwitchBot
 
 Twitch.io bot that integrates LiveSplit features via the TCP server.
 
